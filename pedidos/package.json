@@ -1,0 +1,11 @@
+{
+  "name": "pedidos",
+  "version": "1.0.0",
+  "description": "microservicio para pedidos que consulta el microservicio de usuarios",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alvaro Socop",
+  "license": "ISC"
+}
