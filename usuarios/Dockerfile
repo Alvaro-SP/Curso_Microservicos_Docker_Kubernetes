@@ -6,6 +6,8 @@ RUN npm install
 EXPOSE 5000
 CMD ["node", "app.js"]
 
+# docker build -t usuarios .
+# docker run -p 5000:5000 --name usuarios usuarios
 
 
 

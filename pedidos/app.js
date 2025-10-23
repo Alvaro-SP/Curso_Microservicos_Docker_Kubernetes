@@ -3,14 +3,16 @@ const axios = require('axios'); // Client HTTP para realizar peticiones a otros 
 const app = express();
 const PORT = 5001;
 
+// const USUARIOS_HOST = 'usuarios';
 const USUARIOS_HOST = 'usuarios';
 const USUARIOS_PORT = 5000;
 
 app.get('/pedidos', async (req, res) => {
+    try{
     const url = `http://${USUARIOS_HOST}:${USUARIOS_PORT}/obtenerUsuarios`;
     const response = await axios.get(url);
     console.log(response);
-    const usuarios = response.data;
+    const usuarios = response.data?.data || [];
     
     //generar pedidos
     const pedidos = usuarios.slice(0, 5).map((u, idx) => ({
@@ -23,6 +25,13 @@ app.get('/pedidos', async (req, res) => {
         data: pedidos,
         origenUsuarios: url,
     })
+    } catch (error) {
+        console.error('Error al obtener usuarios:', error.message);
+        res.status(500).json({
+            mensaje: 'Error al obtener usuarios desde el microservicio de usuarios.',
+            error: error.message,
+        });
+    }
 })
 
 app.listen(PORT, () => {

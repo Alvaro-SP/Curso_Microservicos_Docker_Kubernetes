@@ -1,0 +1,2 @@
+# archivo de configuracion para ignorar archivos y carpetas en git
+node_modules/
