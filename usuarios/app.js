@@ -2,7 +2,9 @@ const express = require('express'); // es un framework para aplicaciones web en 
 // express es minimalista, flexible, y posee Middleware (PILARES FUNDAMENTALES)
 const app = express(); // instancia de express
 // const http = require('http');
-const PORT = 5000;
+require('dotenv').config();
+
+const PORT = process.env.PORT;
 
 const usuarios = [
     { id: 1, nombre: 'Carlos', correo: 'carlos@edutek.com' },
