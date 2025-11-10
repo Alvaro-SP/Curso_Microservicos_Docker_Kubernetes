@@ -6,32 +6,66 @@ const app = express();
 const PORT = process.env.PORT;
 
 const targets = {
-    usuarios: `http://${process.env.USUARIOS_HOST}:${process.env.USUARIOS_PORT}`,
-    pedidos: `http://${process.env.PEDIDOS_HOST}:${process.env.PEDIDOS_PORT}`
+    usuarios: process.env.USUARIOS_URL,
+    pedidos: process.env.PEDIDOS_URL
 }
-app.use('/api/usuarios', 
-    createProxyMiddleware({
-        target: targets.usuarios,
-        chageOrigin: true,
-        pathRewrite: {'^/api/usuarios': '/usuarios'},
-        onError(err, req, res){
-            res.status(502).json({error: 'Bad Gateway', message: 'gateway usuarios fallo'});
-        }
-    })
-)
-app.use('/api/pedidos', 
-    createProxyMiddleware({
-        target: targets.pedidos,
-        chageOrigin: true,
-        pathRewrite: {'^/api/pedidos': '/pedidos'},
-        onError(err, req, res){
-            res.status(502).json({error: 'Bad Gateway', message: 'gateway pedidos fallo'});
-        }
-    })
-)
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    if(req.method === 'OPTIONS'){
+        return res.sendStatus(200);
+    }
+    next();
+});
+
+// Middleware de logging para todas las peticiones
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
+
+const usuariosProxy = createProxyMiddleware({
+  target: targets.usuarios,
+  changeOrigin: true,
+  pathRewrite: {
+    '^/': '/api/usuarios' // Convierte '/' a '/api/usuarios'
+  },
+  onProxyReq: (proxyReq, req, res) => {
+    console.log(`[Proxy] Redirigiendo a ${targets.usuarios}${proxyReq.path}`);
+  },
+  onError: (err, req, res) => {
+    console.error('[Proxy Error - Usuarios]', err.message);
+    res.status(502).json({ mensaje: 'Gateway: usuarios no disponible', error: err.message });
+  },
+});
+
+app.use('/api/usuarios', usuariosProxy);
+
+
+const pedidosProxy = createProxyMiddleware({
+  target: targets.pedidos,
+  changeOrigin: true,
+  pathRewrite: {
+    '^/': '/api/pedidos' // Convierte '/' a '/api/pedidos'
+  },
+  onProxyReq: (proxyReq, req, res) => {
+    console.log(`[Proxy] Redirigiendo a ${targets.pedidos}${proxyReq.path}`);
+  },
+  onError: (err, req, res) => {
+    console.error('[Proxy Error - Pedidos]', err.message);
+    res.status(502).json({ mensaje: 'Gateway: pedidos no disponible', error: err.message });
+  },
+});
+
+app.use('/api/pedidos', pedidosProxy);
+
+
 app.get('/', (req,res) => {
     res.json({
-        mensaje: 'API Gateway is running',
+        data: true,
+        mensaje: 'API Gateway esta corriendo correctamente!',
         rutas: ['/api/usuarios','api/pedidos']
     });
 });

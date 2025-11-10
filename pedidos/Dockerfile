@@ -1,7 +1,7 @@
 FROM node:18-alpine
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm ci --only=production || npm install --only=production
 COPY . .
 # Forma para copiar variables ENV para DESARROLLO
 COPY .env .env
@@ -19,8 +19,14 @@ COPY .env .env
 RUN mkdir -p /data
 VOLUME /data
 # ---------------------------
+
+ENV USUARIOS_HOST=usuarios \
+	USUARIOS_PORT=5000 \
+	PORT=5001 \
+	DATA_DIR=/data
+    
 EXPOSE 5001
-CMD ["node", "app.js"]
+CMD ["npm", "start"]
 
 # docker build -t pedidos .
-# docker run -p 5001:5001 --name pedidos pedidos -e "USUARIOS_HOST=host.docker.internal" -e "USUARIOS_PORT=5000" -e "DATA_DIR=/data"
+# docker run -p 5001:5001 --name pedidos pedidos 

@@ -1,0 +1,70 @@
+# docker compose nos va a permitir definir
+# - servicios
+# - redes
+# - volumenes y mas...
+services:
+  usuarios:
+    build: ./usuarios # siempre va la carpeta donde esta el dockerfile del servicio
+    image: servicio-usuarios:1.0
+    container_name: usuarios
+    env_file:
+      - ./usuarios/.env
+    ports:
+      - "5000"
+    networks:
+      - red_microservicios
+  pedidos:
+    build: ./pedidos
+    image: servicio-pedidos:1.0
+    container_name: pedidos
+    env_file:
+      - ./pedidos/.env
+    # environment: sobreescribir las variables de entorno de .env
+    environment:
+      - PORT=5001
+      - USUARIOS_HOST=usuarios
+      - USUARIOS_PORT=5000
+      - DATA_DIR='./data'
+      - NODE_ENV=development
+    volumes:
+      - pedidos-data:/data
+    ports:
+      - "5001:5001"
+    networks:
+      - red_microservicios
+  gateway:
+    build: ./gateway
+    image: servicio-gateway-educativo:1.0
+    container_name: gateway
+    env_file:
+      - ./gateway/.env
+    environment:
+      - USUARIOS_URL=http://usuarios:5000
+      - PEDIDOS_URL=http://pedidos:5001
+    ports:
+      - "8080:8080"
+    depends_on:
+      - usuarios
+      - pedidos
+    networks:
+      - red_microservicios
+  dashboard:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    image: dashboard-frontend:1.0
+    container_name: dashboard
+    ports:
+      - "3000:80"
+    depends_on:
+      - gateway
+    networks:
+      - red_microservicios
+
+networks:
+  red_microservicios:
+    driver: bridge
+
+volumes:
+  pedidos-data:
+    driver: local

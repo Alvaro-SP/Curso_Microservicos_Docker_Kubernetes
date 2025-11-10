@@ -15,7 +15,14 @@ const usuarios = [
 ];
 
 // ENDPOINT: Obtener usuarios
-app.get('/obtenerUsuarios', (req, res) => {
+app.get('/usuarios', (req, res) => {
+    res.json({
+        mensaje: 'Se han obtenido los usuarios del sistema correctamente.',
+        data: usuarios
+    });
+});
+
+app.get('/api/usuarios', (req, res) => {
     res.json({
         mensaje: 'Se han obtenido los usuarios del sistema correctamente.',
         data: usuarios
