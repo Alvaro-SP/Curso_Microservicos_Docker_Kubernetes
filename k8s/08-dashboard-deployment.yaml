@@ -1,0 +1,45 @@
+# Deployment = Dashboard
+#  se va a comunicar con el puerto 30080
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard-deployment
+  namespace: microservicios-app
+  labels:
+    app: dashboard
+spec:
+  replicas: 2 # asigna el numero de pods (containers) a ejecutar
+  selector:
+    matchLabels:
+      app: dashboard
+  template:
+    metadata:
+      labels:
+        app: dashboard
+    spec:
+      containers:
+      - name: dashboard
+        image: dashboard-microservicios:1.0
+        ports:
+        - containerPort: 80
+          name: http
+        resources:
+          request: # recursos Minimos garantizados
+            memory: "128Mi"
+            cpu: "100m"
+          limits: # recursos Maximos permitidos
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 10

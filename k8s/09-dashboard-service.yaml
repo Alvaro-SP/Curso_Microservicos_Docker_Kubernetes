@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  metadata:
+  name: dashboard
+  namespace: microservicios-app
+  labels:
+    app: dashboard
+spec:
+  type: NodePort
+  selector:
+    app: dashboard
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30000
+    protocol: TCP
+    name: http

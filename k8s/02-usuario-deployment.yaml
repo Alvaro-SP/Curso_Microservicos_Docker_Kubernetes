@@ -1,0 +1,53 @@
+# Deployment = Usuarios
+# Define Cómo debe ejecutarse la app.
+# especifica que imagen Docker va a utilizar mi app
+# controlar cuantas copias de la app quiero.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: usuarios-deployment
+  namespace: microservicios-app
+  labels:
+    app: usuarios
+spec:
+  replicas: 2 # asigna el numero de pods (containers) a ejecutar
+  selector:
+    matchLabels:
+      app: usuarios
+  template:
+    metadata:
+      labels:
+        app: usuarios
+    spec:
+      containers:
+      - name: usuarios
+        image: servicio-usuarios:1.0
+        ports:
+        - containerPort: 5000
+          name: http
+        env:
+        - name: PORT
+          value: "5000"
+        - name: NODE_ENV
+          value: "production"
+        resources:
+          request: # recursos Minimos garantizados
+            memory: "128Mi"
+            cpu: "100m"
+          limits: # recursos Maximos permitidos
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /usuarios
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /usuarios
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+            
