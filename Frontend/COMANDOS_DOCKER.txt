@@ -1,0 +1,137 @@
+# ========================================
+# COMANDOS DOCKER PARA FRONTEND DASHBOARD
+# ========================================
+
+# -------------------------
+# OPCIÓN 1: DOCKER COMPOSE (RECOMENDADO)
+# -------------------------
+
+# Crear la red (si no existe)
+docker network create red_microservicios
+
+# Iniciar todos los servicios (incluye frontend)
+docker-compose up -d --build
+
+# Ver estado de los contenedores
+docker-compose ps
+
+# Ver logs de todos los servicios
+docker-compose logs -f
+
+# Ver logs solo del dashboard
+docker-compose logs -f dashboard
+
+# Detener todos los servicios
+docker-compose down
+
+
+# -------------------------
+# OPCIÓN 2: COMANDOS INDIVIDUALES
+# -------------------------
+
+# 1. Crear la red Docker (si no existe)
+docker network create red_microservicios
+
+# 2. Construir la imagen del frontend
+docker build -t dashboard-frontend:1.0 .\frontend
+
+# 3. Ejecutar el contenedor del dashboard
+docker run --rm -d --name dashboard --network red_microservicios -p 3000:80 dashboard-frontend:1.0
+
+# 4. Verificar que está corriendo
+docker ps | Select-String "dashboard"
+
+# 5. Ver logs
+docker logs -f dashboard
+
+# 6. Detener el contenedor
+docker stop dashboard
+
+
+# -------------------------
+# ACCEDER AL DASHBOARD
+# -------------------------
+
+# Una vez iniciado, abre en el navegador:
+# http://localhost:3000
+# http://localhost:3000/dashboard
+
+
+# -------------------------
+# SERVICIOS REQUERIDOS
+# -------------------------
+
+# El dashboard necesita que estos servicios estén corriendo:
+# - Gateway:  http://localhost:8080
+# - Usuarios: http://localhost:5000
+# - Pedidos:  http://localhost:5001
+
+
+# -------------------------
+# COMANDOS ÚTILES
+# -------------------------
+
+# Ver todos los contenedores
+docker ps
+
+# Ver todas las redes
+docker network ls
+
+# Inspeccionar la red
+docker network inspect red_microservicios
+
+# Eliminar contenedor (forzado)
+docker rm -f dashboard
+
+# Reconstruir imagen sin caché
+docker build --no-cache -t dashboard-frontend:1.0 .\frontend
+
+# Ejecutar y entrar al contenedor (debug)
+docker run -it --rm --name dashboard --network red_microservicios -p 3000:80 dashboard-frontend:1.0 sh
+
+# Ver archivos dentro del contenedor
+docker exec dashboard ls -la /usr/share/nginx/html
+
+# Ver configuración de nginx
+docker exec dashboard cat /etc/nginx/conf.d/default.conf
+
+
+# -------------------------
+# LIMPIEZA
+# -------------------------
+
+# Detener y eliminar solo el dashboard
+docker stop dashboard
+docker rm dashboard
+
+# Eliminar la imagen
+docker rmi dashboard-frontend:1.0
+
+# Limpiar todo (cuidado: elimina volúmenes)
+docker-compose down -v
+
+# Eliminar imágenes no usadas
+docker image prune -a
+
+
+# -------------------------
+# SOLUCIÓN DE PROBLEMAS
+# -------------------------
+
+# Si el dashboard no carga:
+# 1. Verificar logs:
+docker logs dashboard
+
+# 2. Verificar que gateway está corriendo:
+docker ps | Select-String "gateway"
+
+# 3. Probar gateway directamente:
+# Invoke-RestMethod http://localhost:8080/api/usuarios
+
+# 4. Reconstruir todo:
+docker-compose down
+docker-compose up -d --build
+
+# Si hay error de puerto ocupado:
+# Ver qué proceso usa el puerto 3000:
+# netstat -ano | Select-String "3000"
