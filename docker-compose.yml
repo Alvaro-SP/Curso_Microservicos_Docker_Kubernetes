@@ -10,7 +10,7 @@ services:
     env_file:
       - ./usuarios/.env
     ports:
-      - "5000"
+      - "5000:5000"
     networks:
       - red_microservicios
   pedidos:
@@ -30,6 +30,8 @@ services:
       - pedidos-data:/data
     ports:
       - "5001:5001"
+    depends_on:
+      - usuarios
     networks:
       - red_microservicios
   gateway:
@@ -52,7 +54,7 @@ services:
     build:
       context: ./Frontend
       dockerfile: Dockerfile
-    image: dashboard-frontend:1.0
+    image: dashboard-microservicios:1.0
     container_name: dashboard
     ports:
       - "3000:80"

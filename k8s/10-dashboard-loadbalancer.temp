@@ -1,0 +1,20 @@
+# Load Balancer siempre me va a proporcionar una IP externa
+# nos va a permitir acceder al dashboard desde fuera del cluster
+# - AWS, GCP, Azure
+# - localmente (MetaLLB O utilizando un tunel de minikube)
+
+apiVersion: v1 
+kind: Service
+metadata:
+  name: dashboard-lb
+  namespace: microservicios-app
+  labels:
+    app: dashboard
+spec:
+  type: LoadBalancer
+  selector:
+    app: dashboard
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP

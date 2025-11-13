@@ -1,0 +1,21 @@
+{
+  "app": {
+    "name": "Gateway Microservicios",
+    "version": "1.0.0",
+    "environment": "production"
+  },
+  "services": {
+    "usuarios": {
+      "url": "http://usuarios:5000",
+      "timeout": 5000
+    },
+    "pedidos": {
+      "url": "http://pedidos:5001",
+      "timeout": 5000
+    }
+  },
+  "logging": {
+    "level": "info",
+    "format": "json"
+  }
+}

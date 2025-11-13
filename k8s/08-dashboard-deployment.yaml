@@ -9,7 +9,13 @@ metadata:
   labels:
     app: dashboard
 spec:
-  replicas: 2 # asigna el numero de pods (containers) a ejecutar
+  replicas: 3 # asigna el numero de pods (containers) a ejecutar
+  # ESTRATEGIA DE ACTUALIZACION
+  strategy:
+    type: RollingUpdate #recreate...
+    rollingUpdate:
+      maxSurge: 1 # maximo 1 pod adicional durante actualizacion
+      maxUnavailable: 1 # maximo 1 pod no disponible durante la actualizacion
   selector:
     matchLabels:
       app: dashboard
@@ -17,6 +23,7 @@ spec:
     metadata:
       labels:
         app: dashboard
+        version: v1.0
     spec:
       containers:
       - name: dashboard
@@ -25,7 +32,7 @@ spec:
         - containerPort: 80
           name: http
         resources:
-          request: # recursos Minimos garantizados
+          requests: # recursos Minimos garantizados
             memory: "128Mi"
             cpu: "100m"
           limits: # recursos Maximos permitidos
@@ -37,9 +44,12 @@ spec:
             port: 80
           initialDelaySeconds: 10
           periodSeconds: 10
+          failureThreshold: 3
         readinessProbe:
           httpGet:
             path: /
             port: 80
           initialDelaySeconds: 10
           periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3

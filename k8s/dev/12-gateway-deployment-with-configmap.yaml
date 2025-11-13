@@ -25,15 +25,32 @@ spec:
         ports:
         - containerPort: 8080
           name: http
+        # OPCION 1: inyectar las variables del configmap
+        envFrom:
+        - configMapRef:
+            name: gateway-config
+        # OPCION 2: variables especificas
         env:
         - name: PORT
-          value: "8080"
+          valueFrom:
+            configMapKeyRef:
+              name: gateway-config
+              key: PORT
         - name: NODE_ENV
-          value: "production"
+          valueFrom:
+            configMapKeyRef:
+              name: gateway-config
+              key: NODE_ENV
         - name: USUARIOS_URL
-          value: "http://usuarios-service:5000"
+          valueFrom:
+            configMapKeyRef:
+              name: gateway-config
+              key: USUARIOS_URL
         - name: PEDIDOS_URL
-          value: "http://pedidos-service:5001"
+          valueFrom:
+            configMapKeyRef:
+              name: gateway-config
+              key: PEDIDOS_URL
         resources:
           requests: # recursos Minimos garantizados
             memory: "128Mi"

@@ -7,7 +7,7 @@ function Header({ onRefresh }) {
         <div className="header-left">
           <h1 className="header-title">
             <span className="header-icon">📊</span>
-            Dashboard Microservicios
+            Dashboard actualizado de Microservicios
           </h1>
           <p className="header-subtitle">API Gateway - Usuarios y Pedidos</p>
         </div>

@@ -23,20 +23,24 @@ spec:
       - name: pedidos
         image: servicio-pedidos:1.0
         ports:
-        - containerPort: 5000
+        - containerPort: 5001
           name: http
         env:
         - name: PORT
           value: "5001"
         - name: NODE_ENV
           value: "production"
-        - name: USUARIOS_URL
-          value: "http://usuarios:5000"
+        - name: USUARIOS_HOST
+          value: "usuarios-service"
+        - name: USUARIOS_PORT
+          value: "5000"
+        - name: DATA_DIR
+          value: "/data"
         volumeMounts:
         - name: pedidos-storage
           mountPath: /data  # donde se guardan los pedidos.json
         resources:
-          request: # recursos Minimos garantizados
+          requests: # recursos Minimos garantizados
             memory: "128Mi"
             cpu: "100m"
           limits: # recursos Maximos permitidos
