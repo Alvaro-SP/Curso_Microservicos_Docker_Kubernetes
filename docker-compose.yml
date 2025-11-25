@@ -43,13 +43,30 @@ services:
     environment:
       - USUARIOS_URL=http://usuarios:5000
       - PEDIDOS_URL=http://pedidos:5001
+      - INVENTARIO_URL=http://inventario:5002
     ports:
       - "8080:8080"
     depends_on:
       - usuarios
       - pedidos
+      - inventario
     networks:
       - red_microservicios
+  inventario:
+    build: ./inventario
+    image: servicio-inventario:1.0
+    container_name: inventario
+    environment:
+      - ASPNETCORE_URLS=http://0.0.0.0:5002
+      - DATABASE_URL=Host=postgres;Port=5432;Database=inventario_db;Username=postgres;Password=postgres123
+    ports:
+      - "5002:5002"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - red_microservicios
+    restart: on-failure
   dashboard:
     build:
       context: ./Frontend
@@ -62,6 +79,26 @@ services:
       - gateway
     networks:
       - red_microservicios
+  # ! Base de datos PostgreSQL
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres_microservicios
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres123
+      - POSTGRES_DB=inventario_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./db/init.sh:/docker-entrypoint-initdb.d/init.sh
+    networks:
+      - red_microservicios
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   red_microservicios:
@@ -69,4 +106,6 @@ networks:
 
 volumes:
   pedidos-data:
+    driver: local
+  postgres-data:
     driver: local

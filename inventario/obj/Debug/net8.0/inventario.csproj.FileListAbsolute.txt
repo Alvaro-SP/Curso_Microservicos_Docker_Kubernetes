@@ -1,0 +1,15 @@
+C:\Users\socop\Documents\Curso_Microservicos_Docker_Kubernetes\inventario\bin\Debug\net8.0\inventario.exe
+C:\Users\socop\Documents\Curso_Microservicos_Docker_Kubernetes\inventario\bin\Debug\net8.0\inventario.deps.json
+C:\Users\socop\Documents\Curso_Microservicos_Docker_Kubernetes\inventario\bin\Debug\net8.0\inventario.runtimeconfig.json
+C:\Users\socop\Documents\Curso_Microservicos_Docker_Kubernetes\inventario\bin\Debug\net8.0\inventario.dll
+C:\Users\socop\Documents\Curso_Microservicos_Docker_Kubernetes\inventario\bin\Debug\net8.0\inventario.pdb
+C:\Users\socop\Documents\Curso_Microservicos_Docker_Kubernetes\inventario\obj\Debug\net8.0\inventario.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\socop\Documents\Curso_Microservicos_Docker_Kubernetes\inventario\obj\Debug\net8.0\inventario.AssemblyInfoInputs.cache
+C:\Users\socop\Documents\Curso_Microservicos_Docker_Kubernetes\inventario\obj\Debug\net8.0\inventario.AssemblyInfo.cs
+C:\Users\socop\Documents\Curso_Microservicos_Docker_Kubernetes\inventario\obj\Debug\net8.0\inventario.csproj.CoreCompileInputs.cache
+C:\Users\socop\Documents\Curso_Microservicos_Docker_Kubernetes\inventario\obj\Debug\net8.0\inventario.sourcelink.json
+C:\Users\socop\Documents\Curso_Microservicos_Docker_Kubernetes\inventario\obj\Debug\net8.0\inventario.dll
+C:\Users\socop\Documents\Curso_Microservicos_Docker_Kubernetes\inventario\obj\Debug\net8.0\refint\inventario.dll
+C:\Users\socop\Documents\Curso_Microservicos_Docker_Kubernetes\inventario\obj\Debug\net8.0\inventario.pdb
+C:\Users\socop\Documents\Curso_Microservicos_Docker_Kubernetes\inventario\obj\Debug\net8.0\inventario.genruntimeconfig.cache
+C:\Users\socop\Documents\Curso_Microservicos_Docker_Kubernetes\inventario\obj\Debug\net8.0\ref\inventario.dll

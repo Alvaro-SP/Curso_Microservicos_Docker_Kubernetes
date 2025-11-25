@@ -7,7 +7,8 @@ const PORT = process.env.PORT;
 
 const targets = {
     usuarios: process.env.USUARIOS_URL,
-    pedidos: process.env.PEDIDOS_URL
+    pedidos: process.env.PEDIDOS_URL,
+    inventario: process.env.INVENTARIO_URL,
 }
 
 app.use((req, res, next) => {
@@ -60,6 +61,32 @@ const pedidosProxy = createProxyMiddleware({
 });
 
 app.use('/api/pedidos', pedidosProxy);
+
+// Proxy hacia inventario (C# .NET)
+const inventarioProxy = createProxyMiddleware({
+  target: targets.inventario,
+  changeOrigin: true,
+  pathRewrite: (path,req) => {
+    return '/inventario' + path;
+  },
+  onProxyReq: (proxyReq, req, res) => {
+    console.log(`[Proxy] Redirigiendo a ${targets.inventario}${proxyReq.path}`);
+  },
+  onError: (err, req, res) => {
+    console.error('[Proxy Error - Inventario]', err.message);
+    res.status(502).json({ mensaje: 'Gateway: inventario no disponible', error: err.message });
+  },
+})
+
+app.use('/api/inventario', inventarioProxy);
+
+app.get('/health', (req,res) => {
+    res.json({
+        status: 'ok',
+        service: 'API Gateway',
+        timestamp: new Date().toISOString(),
+    });
+});
 
 
 app.get('/', (req,res) => {

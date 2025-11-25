@@ -1,0 +1,10 @@
+# SCRIPT PARA INICIAR NUESTRO POSTGRESQL
+
+echo "INICIANDO DB DE INVENTARIO"
+
+psql -v --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+    CREATE database inventario_db;
+    GRANT ALL PRIVILEGES ON DATABASE inventario_db TO postgres;
+EOSQL;
+
+echo "DB DE INVENTARIO CREADA"

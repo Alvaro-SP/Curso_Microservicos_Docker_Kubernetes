@@ -11,7 +11,8 @@ COPY .env .env
 
 ENV PORT=8080 \
     USUARIOS_URL=http://usuarios:5000 \
-    PEDIDOS_URL=http://pedidos:5001
+    PEDIDOS_URL=http://pedidos:5001 \
+    INVENTARIO_URL=http://inventario:5002
 
 EXPOSE 8080
 
