@@ -1,0 +1,237 @@
+/* ============================================ */
+/* INVENTARIO CARD - Estilos específicos */
+/* ============================================ */
+
+.inventario-card {
+  grid-column: 1 / -1; /* Ocupa todo el ancho disponible */
+}
+
+.inventario-table {
+  width: 100%;
+}
+
+/* ============================================ */
+/* PRODUCTO INFO */
+/* ============================================ */
+
+.product-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.product-icon {
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+.product-name {
+  font-weight: 500;
+  color: #1e293b;
+  font-size: 0.9rem;
+}
+
+/* ============================================ */
+/* STOCK BADGES - Colores según disponibilidad */
+/* ============================================ */
+
+.stock-badge {
+  display: inline-block;
+  padding: 0.4rem 0.9rem;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-align: center;
+  min-width: 100px;
+  transition: all 0.3s ease;
+}
+
+.stock-good {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.stock-medium {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: white;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+}
+
+.stock-low {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+  animation: pulse-warning 2s ease-in-out infinite;
+}
+
+.stock-out {
+  background: linear-gradient(135deg, #6b7280, #4b5563);
+  color: white;
+  box-shadow: 0 2px 8px rgba(107, 114, 128, 0.3);
+}
+
+@keyframes pulse-warning {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.5);
+  }
+}
+
+/* ============================================ */
+/* PRECIO */
+/* ============================================ */
+
+.precio {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #059669;
+  background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+  padding: 0.4rem 0.9rem;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+/* ============================================ */
+/* BOTONES DE ACCIÓN */
+/* ============================================ */
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.action-buttons button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.action-buttons button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-reservar {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+}
+
+.btn-reservar:hover:not(:disabled) {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+}
+
+.btn-reservar:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.btn-reabastecer {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+}
+
+.btn-reabastecer:hover:not(:disabled) {
+  background: linear-gradient(135deg, #059669, #047857);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.btn-reabastecer:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* ============================================ */
+/* FOOTER CON LEYENDA */
+/* ============================================ */
+
+.card-footer {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #e5e7eb;
+}
+
+.legend {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.legend-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  display: inline-block;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ============================================ */
+/* RESPONSIVE - Móviles */
+/* ============================================ */
+
+@media (max-width: 768px) {
+  .inventario-table {
+    font-size: 0.8rem;
+  }
+
+  .product-info {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .action-buttons button {
+    width: 100%;
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .stock-badge {
+    min-width: 80px;
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+  }
+
+  .legend {
+    gap: 0.75rem;
+  }
+
+  .legend-item {
+    font-size: 0.75rem;
+  }
+}

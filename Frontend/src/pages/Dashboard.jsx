@@ -5,10 +5,12 @@ import PedidosCard from '../components/PedidosCard'
 import Header from '../components/Header'
 import StatsCard from '../components/StatsCard'
 import './Dashboard.css'
+import InventarioCard from '../components/InventarioCard'
 
 function Dashboard() {
   const [usuarios, setUsuarios] = useState([])
   const [pedidos, setPedidos] = useState([])
+  const [inventario, setInventario] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
@@ -27,13 +29,15 @@ function Dashboard() {
     
     try {
       // Llamadas paralelas al API Gateway
-      const [usuariosRes, pedidosRes] = await Promise.all([
+      const [usuariosRes, pedidosRes, inventarioRes] = await Promise.all([
         axios.get(`${API_URL}/usuarios`),
-        axios.get(`${API_URL}/pedidos`)
+        axios.get(`${API_URL}/pedidos`),
+        axios.get(`${API_URL}/inventario`),
       ])
 
       setUsuarios(usuariosRes.data.data || [])
       setPedidos(pedidosRes.data.data || [])
+      setInventario(inventarioRes.data.data || [])
     } catch (err) {
       console.error('Error fetching data:', err)
       setError(err.message || 'Error al cargar los datos')
@@ -41,6 +45,22 @@ function Dashboard() {
       setLoading(false)
     }
   }
+  const handleReservar = async (itemId, cantidad) => {
+    try{
+      const response = await axios.post(`${API_URL}/inventario/reservar`, 
+        { Id: itemId, Cantidad: cantidad })
+      setInventario(prev => 
+        prev.map(item =>
+          item.id === itemId ? response.data.item : item
+        )
+      )
+      alert("La reserva se realizo exitosamente");
+      console.log('Reserva exitosa:', response.data);
+    }catch(err){
+      console.error('Error reservando item:', err)
+    }
+  }
+
 
   const handleRefresh = () => {
     fetchData()
@@ -73,6 +93,9 @@ function Dashboard() {
       </div>
     )
   }
+  const totalProductos = inventario.length;
+  const totalStock= inventario.reduce((sum, item) => sum + item.stock, 0);
+  const productosAgotados = inventario.filter(item => item.stock ===0).length;
 
   return (
     <div className="dashboard">
@@ -100,6 +123,21 @@ function Dashboard() {
             color="#f59e0b"
           />
           <StatsCard
+            title="Procuctos en Inventario"
+            value={totalProductos}
+            color="#8b5cf6"
+          />
+          <StatsCard
+            title="Stock Total"
+            value={totalStock}
+            color="rgba(215, 106, 28, 1)"
+          />
+          <StatsCard
+            title="Productos Agotados"
+            value={productosAgotados}
+            color={productosAgotados > 0 ? "#ef4444" : "#10b981"}
+          />
+          <StatsCard
             title="Estado Gateway"
             value="Activo"
             icon="✅"
@@ -111,6 +149,10 @@ function Dashboard() {
         <div className="content-grid">
           <UsuariosCard usuarios={usuarios} />
           <PedidosCard pedidos={pedidos} />
+        </div>
+        {/* Inventario C# */}
+        <div className="inventario-section">
+          <InventarioCard inventario={inventario} onReservar={handleReservar} />
         </div>
       </div>
     </div>

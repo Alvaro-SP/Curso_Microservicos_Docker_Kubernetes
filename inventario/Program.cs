@@ -101,16 +101,39 @@ app.MapGet("/inventario/{id:int}", async (int id, InventarioDbContext db) =>
         : Results.Ok(item);
 });
 
+// reservar item de inventario (disminuir stock)
+app.MapPost("/inventario/reservar", async (HttpContext ctx, InventarioDbContext db) =>
+{
+    var body = await ctx.Request.ReadFromJsonAsync<ReservaDto>();
+    if(body is null || body.Id <= 0)
+        return Results.BadRequest(new { mensaje = "Payload invalido. Por favor enviar un id y cantidad validos."});
+
+    var item = await db.Items.FindAsync(body.Id);
+    if (item is null)
+        return Results.NotFound(new { mensaje = $"El item de inventario con id {body.Id} no fue encontrado."});
+
+    // validar si hay en stock
+    var cantidad = body.Cantidad ?? 1;
+    if(item.Stock < cantidad)
+        return Results.BadRequest(new { mensaje = $"No hay suficiente stock para el item {item.Nombre}. Stock actual: {item.Stock}"});
+
+    item.Stock -= cantidad;
+    await db.SaveChangesAsync();
+
+    return Results.Ok(new
+    {
+        mensaje = $"Se ha reservado {cantidad} unidad(es) del producto {item.Nombre}. Stock restante: {item.Stock}",
+        data = item
+    });
+});
+// reabastecer item de inventario (aumentar stock)
+// crear un nuevo item de inventario
+
+
 Console.WriteLine("SERVICIO DE INVENTARIO HA SIDO INICIADO");
 Console.WriteLine($"Escuchando en el puerto 5002...{builder.Configuration["ASPNETCORE_URLS"]}");
 app.Run();
 
-
-
-// TODO para despues
-// reservar item de inventario (disminuir stock)
-// reabastecer item de inventario (aumentar stock)
-// crear un nuevo item de inventario
 
 
 // ******************************************
@@ -134,6 +157,8 @@ public class InventoryItem
 
     public DateTime CreatedAt { get; set;  } = DateTime.UtcNow;
 }
+
+public record ReservaDto(int Id, int? Cantidad);
 
 // DBCONTEXT = contexto para manejar consultas a la base de datos
 public class InventarioDbContext : DbContext
