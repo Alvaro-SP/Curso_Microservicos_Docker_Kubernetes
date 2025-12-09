@@ -1,6 +1,44 @@
 require('dotenv').config();
 const express = require('express');
 const { createProxyMiddleware } = require('http-proxy-middleware');
+const promClient = require('prom-client');
+
+const register = new promClient.Registry(); //para el registro de metricas
+
+promClient.collectDefaultMetrics({ register }); // recolectar metricas por defecto
+
+// metricas personalizadas
+// contador de requests
+const httpRequestsTotal = new promClient.Counter({
+    name: 'http_requests_total',
+    help: 'Total de peticiones HTTP de mi gateway',
+    labelNames: ['method', 'path', 'status'],
+    registers: [register],
+})
+// duracion de requests
+const httpRequestDuration = new promClient.Counter({
+    name: 'http_request_duration_seconds',
+    help: 'Duración de las peticiones HTTP de mi gateway en segundos',
+    labelNames: ['method', 'path', 'status'],
+    buckets: [0.01, 0.05, 0.1, 0.5, 1, 2, 5], //sirve para crear de mejor manera mi histograma
+    registers: [register],
+})
+
+app.use((req, res, next) => {
+  const start = Date.now();
+  res.on('finish', () => {
+    const duration = (Date.now() - start) / 1000;
+    const path = req.route ? req.route.path : req.path;
+    httpRequestsTotal.inc({ method: req.method, path: path, status: res.statusCode });
+    httpRequestDuration.observe({ method: req.method, path: path, status: res.statusCode }, duration);
+  });
+  next();
+})
+// endpoint de metricas que utilizara prometheus para monitorear los servicios
+app.get('/metrics', async (req, res) => {
+    res.set('Content-Type', register.contentType);
+    res.end(await register.metrics());
+});
 
 const app = express();
 const PORT = process.env.PORT;
