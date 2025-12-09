@@ -1,0 +1,35 @@
+global:
+  scrape_interval: "15s"
+  evaluation_interval: "15s"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+scrape_configs:
+  # es para que prometheus se monitoree a si mismo
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+  
+  # Configuraciones de que microservicios va a monitorear mi prometheus
+  - job_name: 'gateway'
+    static_configs:
+      - targets: ['gateway:8080']
+    metrics_path: /metrics
+
+  - job_name: 'usuarios'
+    static_configs:
+      - targets: ['usuarios:5000']
+    metrics_path: /metrics
+
+  - job_name: 'pedidos'
+    static_configs:
+      - targets: ['pedidos:5001']
+    metrics_path: /metrics
+
+  - job_name: 'inventario'
+    static_configs:
+      - targets: ['inventario:5002']
+    metrics_path: /metrics
