@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: inventario
-        image: servicio-inventario:1.0
+        image: us-central1-docker.pkg.dev/eduteklatam/microservicios-repo/servicio-inventario:1.0
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5002

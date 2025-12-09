@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: pedidos
-        image: servicio-pedidos:1.0
+        image: us-central1-docker.pkg.dev/eduteklatam/microservicios-repo/servicio-pedidos:1.0
         ports:
         - containerPort: 5001
           name: http

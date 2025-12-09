@@ -1,0 +1,15 @@
+
+docker tag servicio-usuarios:1.0 us-central1-docker.pkg.dev/eduteklatam/microservicios-repo/servicio-usuarios:1.0
+docker tag servicio-inventario:1.0 us-central1-docker.pkg.dev/eduteklatam/microservicios-repo/servicio-inventario:1.0
+docker tag servicio-gateway-educativo:1.0 us-central1-docker.pkg.dev/eduteklatam/microservicios-repo/servicio-gateway-educativo:1.0
+docker tag servicio-pedidos:1.0 us-central1-docker.pkg.dev/eduteklatam/microservicios-repo/servicio-pedidos:1.0
+docker tag dashboard-microservicios:1.0 us-central1-docker.pkg.dev/eduteklatam/microservicios-repo/dashboard-microservicios:1.0
+
+
+
+
+docker push us-central1-docker.pkg.dev/eduteklatam/microservicios-repo/servicio-usuarios:1.0
+docker push us-central1-docker.pkg.dev/eduteklatam/microservicios-repo/servicio-inventario:1.0
+docker push us-central1-docker.pkg.dev/eduteklatam/microservicios-repo/servicio-gateway-educativo:1.0
+docker push us-central1-docker.pkg.dev/eduteklatam/microservicios-repo/servicio-pedidos:1.0
+docker push us-central1-docker.pkg.dev/eduteklatam/microservicios-repo/dashboard-microservicios:1.0

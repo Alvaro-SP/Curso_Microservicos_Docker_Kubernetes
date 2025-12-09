@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: gateway
-        image: servicio-gateway-educativo:1.0
+        image: us-central1-docker.pkg.dev/eduteklatam/microservicios-repo/servicio-gateway-educativo:1.0
         ports:
         - containerPort: 8080
           name: http

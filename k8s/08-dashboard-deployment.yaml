@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
       - name: dashboard
-        image: dashboard-microservicios:1.0
+        image: us-central1-docker.pkg.dev/eduteklatam/microservicios-repo/dashboard-microservicios:1.0
         ports:
         - containerPort: 80
           name: http

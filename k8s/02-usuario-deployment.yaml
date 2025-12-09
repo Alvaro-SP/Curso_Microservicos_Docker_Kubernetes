@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: usuarios
-        image: servicio-usuarios:1.0
+        image: us-central1-docker.pkg.dev/eduteklatam/microservicios-repo/servicio-usuarios:1.0
         ports:
         - containerPort: 5000
           name: http
