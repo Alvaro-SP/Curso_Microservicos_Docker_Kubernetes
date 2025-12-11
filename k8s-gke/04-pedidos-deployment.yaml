@@ -1,0 +1,64 @@
+# Deployment = Pedidos
+#  necesitamos comunicarnos con usuarios
+#  utilizaremos un volumen
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pedidos-deployment
+  namespace: microservicios-app
+  labels:
+    app: pedidos
+spec:
+  replicas: 1 # asigna el numero de pods (containers) a ejecutar
+  selector:
+    matchLabels:
+      app: pedidos
+  template:
+    metadata:
+      labels:
+        app: pedidos
+    spec:
+      containers:
+      - name: pedidos
+        image: us-central1-docker.pkg.dev/eduteklatam/microservicios-repo/servicio-pedidos:1.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5001
+          name: http
+        env:
+        - name: PORT
+          value: "5001"
+        - name: NODE_ENV
+          value: "production"
+        - name: USUARIOS_HOST
+          value: "usuarios-service"
+        - name: USUARIOS_PORT
+          value: "5000"
+        - name: DATA_DIR
+          value: "/data"
+        volumeMounts:
+        - name: pedidos-storage
+          mountPath: /data  # donde se guardan los pedidos.json
+        resources:
+          requests: # recursos Minimos garantizados
+            memory: "128Mi"
+            cpu: "100m"
+          limits: # recursos Maximos permitidos
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /pedidos
+            port: 5001
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /pedidos
+            port: 5001
+          initialDelaySeconds: 10
+          periodSeconds: 10
+      volumes:
+      - name: pedidos-storage
+        emptyDir: {}

@@ -1,0 +1,31 @@
+# SERVICE - Usuarios
+# nos brinda una IP y un DNS estable para acceder a los pods
+# nos permite hacer un balanceo de carga entre las replicas creadas
+# es un docker network pero super avanzado
+
+#  mantiene vivo un pod recreando una ip en caso muera
+#  permitir comunicacion entre servicios por medio de nombres DNS (Domain Name System)
+
+apiVersion: v1
+kind: Service
+metadata:
+  metadata:
+  name: usuarios-service
+  namespace: microservicios-app
+  labels:
+    app: usuarios
+spec:
+  type: ClusterIP
+  # =======================Tipos de Servicios============================
+  # ClusterIP (por defecto): solo va a ser accesible dentro del cluster
+  # NodePort: accesible desde fuera pero con un puerto especifico.
+  # LoadBalancer: utiliza un balanceador externo (ya en la nube)
+  # ===================================================
+  selector:
+    app: usuarios # conectar con los pods que tengan esta etiqueta
+  ports:
+  - port: 5000 # es el puerto del service (Otros servicios usan este puerto para conectarse)
+    targetPort: 5000 # puerto del contenedor
+    protocol: TCP
+    name: http
+  sessionAffinity: None # que no espere la persistencia de sesion

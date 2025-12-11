@@ -1,0 +1,12 @@
+# NAMESPACE
+# Es como una carpeta virtual
+# sirve para organizar, asegurar y aislar (dev, prod, test) recursos en Kubernetes
+# es similar a tener carpetas separadas para cada proyecto.
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: microservicios-app
+  labels:
+    name: microservicios-app
+    environment: production

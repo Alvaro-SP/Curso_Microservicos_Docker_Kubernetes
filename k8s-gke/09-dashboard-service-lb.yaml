@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  metadata:
+  name: dashboard
+  namespace: microservicios-app
+  labels:
+    app: dashboard
+spec:
+  type: LoadBalancer
+  selector:
+    app: dashboard
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: http
